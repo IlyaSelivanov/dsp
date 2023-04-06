@@ -7,6 +7,7 @@ pub struct Statistics {
     variance: f64,
     standard_deviation: f64,
     median: Median,
+    histogram: BTreeMap<i32, u32>,
 }
 
 impl Statistics {
@@ -16,6 +17,7 @@ impl Statistics {
             variance: 0f64,
             standard_deviation: 0f64,
             median: Median::None,
+            histogram: BTreeMap::new(),
         }
     }
 
@@ -52,12 +54,17 @@ impl Statistics {
             Median::Odd(m) => Median::Odd(m),
             _ => Median::None,
         };
+        let hist = match build_btree_map_histogram(&vector) {
+            Some(tree) => tree,
+            None => BTreeMap::new(),
+        };
 
         Statistics {
             mean: mean,
             standard_deviation: variance.sqrt(),
             variance: variance,
             median: med,
+            histogram: hist,
         }
     }
 
@@ -79,6 +86,11 @@ impl Statistics {
     /// Returns a reference to the median of this [`Statistics`].
     pub fn median(&self) -> &Median {
         &self.median
+    }
+
+    /// Returns a reference to the histogram of this [`Statistics`].
+    pub fn histogram(&self) -> &BTreeMap<i32, u32> {
+        &self.histogram
     }
 }
 
@@ -137,7 +149,7 @@ pub fn get_median(vec: &Vec<i32>) -> Median {
 
     //For debug purposes only.
     //TODO: remove when done.
-    println!("get_median mut_vec: {:?}", mut_vec);
+    // println!("get_median mut_vec: {:?}", mut_vec);
 
     if vec.len() % 2 == 0 {
         return Median::Even(mut_vec[idx - 1], mut_vec[idx]);

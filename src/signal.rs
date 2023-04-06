@@ -45,7 +45,8 @@ impl Signal {
             Median::Even(first, second) => println!("signal median = {first}, {second}"),
             Median::Odd(median) => println!("signal median = {median}"),
             _ => println!("signal median = empty"),
-        }
+        };
+        println!("signal histogram: {:?}", self.statistics.histogram());
     }
 }
 
