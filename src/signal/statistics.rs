@@ -137,7 +137,7 @@ pub fn get_median(vec: &Vec<i32>) -> Median {
         return Median::None;
     }
 
-    //Copying input vector to do not modify original.
+    //Copying input vector so as not to modify the original.
     //Think it is a bad design from performance perspective.
     //TODO: replace with an adequate algorithm.
     let mut mut_vec: Vec<i32> = Vec::new();
