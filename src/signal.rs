@@ -3,7 +3,7 @@ mod statistics;
 pub use crate::signal::statistics::*;
 
 pub struct Signal {
-    data: Vec<i32>,
+    data: Vec<i64>,
     statistics: Statistics,
 }
 
@@ -17,12 +17,12 @@ impl Signal {
     }
 
     /// Creates a new [`Signal`] with data provided.
-    pub fn from_i32_vector(vector: Vec<i32>) -> Self {
+    pub fn from_vector(vector: Vec<i64>) -> Self {
         if vector.is_empty() {
             panic!("Not empty data needed.")
         }
 
-        let statistics = Statistics::form_i32_vector(&vector);
+        let statistics = Statistics::form_vector(&vector);
 
         Signal {
             data: vector,
@@ -31,7 +31,7 @@ impl Signal {
     }
 
     /// Returns a reference to the data of this [`Signal`].
-    pub fn data(&self) -> &[i32] {
+    pub fn data(&self) -> &[i64] {
         self.data.as_ref()
     }
 
@@ -40,7 +40,10 @@ impl Signal {
         println!("signal data length: {}", self.data().len());
         println!("signal mean: {:.3}", self.statistics.mean());
         println!("signal variance: {:.3}", self.statistics.variance());
-        println!("signal st. deviation: {:.3}", self.statistics.standard_deviation());
+        println!(
+            "signal st. deviation: {:.3}",
+            self.statistics.standard_deviation()
+        );
         match self.statistics.median() {
             Median::Even(first, second) => println!("signal median = {first}, {second}"),
             Median::Odd(median) => println!("signal median = {median}"),

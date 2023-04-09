@@ -7,7 +7,7 @@ pub struct Statistics {
     variance: f64,
     standard_deviation: f64,
     median: Median,
-    histogram: BTreeMap<i32, u32>,
+    histogram: BTreeMap<i64, usize>,
 }
 
 impl Statistics {
@@ -21,17 +21,21 @@ impl Statistics {
         }
     }
 
-    /// Generates random i32 vector with a specified length in a speciied range.
-    pub fn generate_random_i32_vector(length: usize, range: (i32, i32)) -> Option<Vec<i32>> {
+    /// Generates random i64 vector with a specified length in a speciied range.
+    pub fn generate_random_vector(length: usize, range: (i64, i64)) -> Option<Vec<i64>> {
         if length <= 0 || range.0 > range.1 {
             return None;
         }
 
-        let mut vec: Vec<i32> = Vec::new();
+        let mut vec: Vec<i64> = Vec::new();
         let mut rng = thread_rng();
 
         for _ in 0..length {
-            vec.push(rng.gen_range(range.0..=range.1));
+            let mut rnd = 0i64;
+            for _ in 0..24 {
+                rnd += rng.gen_range(range.0..=range.1);
+            }
+            vec.push((rnd - 6i64) * 20i64 - 20i64);
         }
 
         Some(vec)
@@ -42,7 +46,7 @@ impl Statistics {
     /// # Panics
     ///
     /// Panics if provided vector is empty.
-    pub fn form_i32_vector(vector: &Vec<i32>) -> Self {
+    pub fn form_vector(vector: &Vec<i64>) -> Self {
         if vector.is_empty() {
             panic!("Not empty data needed.")
         }
@@ -89,13 +93,13 @@ impl Statistics {
     }
 
     /// Returns a reference to the histogram of this [`Statistics`].
-    pub fn histogram(&self) -> &BTreeMap<i32, u32> {
+    pub fn histogram(&self) -> &BTreeMap<i64, usize> {
         &self.histogram
     }
 }
 
 /// Calculates mean value for provded vector.
-pub fn calc_vector_mean(vec: &Vec<i32>) -> f64 {
+pub fn calc_vector_mean(vec: &Vec<i64>) -> f64 {
     if vec.is_empty() {
         return 0.0;
     }
@@ -110,14 +114,14 @@ pub fn calc_vector_mean(vec: &Vec<i32>) -> f64 {
 }
 
 /// Calculates variance for provded vector.
-pub fn calc_vector_variance(vec: &Vec<i32>) -> f64 {
+pub fn calc_vector_variance(vec: &Vec<i64>) -> f64 {
     if vec.is_empty() {
         return 0.0;
     }
 
     let mean = calc_vector_mean(vec);
 
-    let mut variance = 0.0;
+    let mut variance = 0f64;
     for item in vec.iter() {
         variance += (*item as f64 - mean).powf(2.0);
     }
@@ -126,13 +130,13 @@ pub fn calc_vector_variance(vec: &Vec<i32>) -> f64 {
 }
 
 pub enum Median {
-    Even(i32, i32),
-    Odd(i32),
+    Even(i64, i64),
+    Odd(i64),
     None,
 }
 
 /// Gets median value(s) of a provded vector.
-pub fn get_median(vec: &Vec<i32>) -> Median {
+pub fn get_median(vec: &Vec<i64>) -> Median {
     if vec.is_empty() {
         return Median::None;
     }
@@ -140,7 +144,7 @@ pub fn get_median(vec: &Vec<i32>) -> Median {
     //Copying input vector so as not to modify the original.
     //Think it is a bad design from performance perspective.
     //TODO: replace with an adequate algorithm.
-    let mut mut_vec: Vec<i32> = Vec::new();
+    let mut mut_vec: Vec<i64> = Vec::new();
     for item in vec {
         mut_vec.push(*item);
     }
@@ -159,12 +163,12 @@ pub fn get_median(vec: &Vec<i32>) -> Median {
 }
 
 ///Builds a BTreeMap histogram of a provided vector.
-pub fn build_btree_map_histogram(vec: &Vec<i32>) -> Option<BTreeMap<i32, u32>> {
+pub fn build_btree_map_histogram(vec: &Vec<i64>) -> Option<BTreeMap<i64, usize>> {
     if vec.is_empty() {
         return None;
     }
 
-    let mut map: BTreeMap<i32, u32> = BTreeMap::new();
+    let mut map: BTreeMap<i64, usize> = BTreeMap::new();
 
     for item in vec {
         let count = map.entry(*item).or_insert(0);
