@@ -39,25 +39,6 @@ impl Signal {
     pub fn statistics(&self) -> &Statistics {
         &self.statistics
     }
-
-    /// Prints info of this [`Signal`].
-    pub fn print_info(&self) {
-        println!("signal data length: {}", self.data().len());
-        println!("signal mean: {:.3}", self.statistics.mean());
-        println!("signal variance: {:.3}", self.statistics.variance());
-        println!(
-            "signal st. deviation: {:.3}",
-            self.statistics.standard_deviation()
-        );
-        match self.statistics.median() {
-            Median::Even(first, second) => println!("signal median = {first}, {second}"),
-            Median::Odd(median) => println!("signal median = {median}"),
-            _ => println!("signal median = empty"),
-        };
-        println!("signal histogram: {:?}", self.statistics.histogram());
-    }
-
-    
 }
 
 impl Default for Signal {
