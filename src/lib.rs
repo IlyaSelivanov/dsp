@@ -99,6 +99,10 @@ pub fn run() -> Result<(), Box<dyn Error>> {
             _ => continue,
         }
     }
+
+    println!("{:#?}", signal.statistics().histogram());
+    charts::plot_histogram(signal.statistics().histogram())?;
+
     Ok(())
 }
 
