@@ -1,7 +1,6 @@
 mod charts;
 mod signal;
 
-use crate::charts::*;
 use crate::signal::*;
 use std::error::Error;
 use std::io;
@@ -66,35 +65,58 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                 println!("Data successfully generated.");
             }
             Command::Mean => {
-                if signal.data().is_empty() {
-                    println!("Empty data. Use 'generate' or 'load' data first.");
+                if check_data_empty(&signal) {
                     continue;
                 }
 
                 println!("mean = {}", signal.statistics().mean());
             }
+            Command::Median => {
+                if check_data_empty(&signal) {
+                    continue;
+                }
+
+                match signal.statistics().median() {
+                    Median::Even(f, s) => println!("median = [{}, {}]", f, s),
+                    Median::Odd(m) => println!("median = {m}"),
+                    _ => continue,
+                }
+            }
+            Command::Variance => {
+                if check_data_empty(&signal) {
+                    continue;
+                }
+
+                println!("variance = {}", signal.statistics().variance())
+            }
+            Command::Deviation => {
+                if check_data_empty(&signal) {
+                    continue;
+                }
+
+                println!("deviation = {}", signal.statistics().standard_deviation())
+            }
             _ => continue,
         }
     }
-
-    // let signal: Vec<i64> = match Statistics::generate_random_vector(1_000_000, (0, 10)) {
-    //     Some(vec) => vec,
-    //     None => Vec::new(),
-    // };
-
-    // let signal = Signal::from_vector(signal);
-    // signal.print_info();
-
-    // // println!("{:?}", signal.data());
-
-    // example_chart()?;
-
     Ok(())
 }
 
+fn check_data_empty(signal: &Signal) -> bool {
+    if signal.data().is_empty() {
+        println!("Empty data. Use 'generate' or 'load' data first.");
+        return true;
+    }
+
+    false
+}
+
 fn print_help() {
-    println!("List of available connands:");
+    println!("List of available commands:");
     println!("\t'help' - prints available commands;");
     println!("\t'generate' - generates random i64 vector;");
     println!("\t'mean' - calculates mean;");
+    println!("\t'median' - calculates median;");
+    println!("\t'variance' - calculates variance;");
+    println!("\t'deviation' - calculates standard deviation;");
 }
