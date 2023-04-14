@@ -35,6 +35,11 @@ impl Signal {
         self.data.as_ref()
     }
 
+    /// Returns a reference to the statistics of this [`Signal`].
+    pub fn statistics(&self) -> &Statistics {
+        &self.statistics
+    }
+
     /// Prints info of this [`Signal`].
     pub fn print_info(&self) {
         println!("signal data length: {}", self.data().len());
@@ -51,6 +56,8 @@ impl Signal {
         };
         println!("signal histogram: {:?}", self.statistics.histogram());
     }
+
+    
 }
 
 impl Default for Signal {
