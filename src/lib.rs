@@ -123,4 +123,5 @@ fn print_help() {
     println!("\t'median' - calculates median;");
     println!("\t'variance' - calculates variance;");
     println!("\t'deviation' - calculates standard deviation;");
+    println!("\t'histogram' - builds histogram chart and saves it to a file;");
 }
