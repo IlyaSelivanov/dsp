@@ -46,3 +46,38 @@ impl Default for Signal {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod signal_tests {
+    use super::*;
+
+    #[test]
+    fn create_new_signal_data_is_empty() {
+        let signal = Signal::new();
+
+        assert_eq!(0, signal.data.len());
+    }
+
+    #[test]
+    fn create_new_signal_statistics_is_empty() {
+        let signal = Signal::new();
+        let statistics = Statistics::new();
+
+        assert_eq!(statistics, signal.statistics);
+    }
+
+    #[test]
+    #[should_panic]
+    fn create_signal_from_empty_vector() {
+        let vector: Vec<i64> = Vec::new();
+        let _ = Signal::from_vector(vector);
+    }
+
+    #[test]
+    fn create_signal_from_vector() {
+        let vector = vec![1, 2, 3];
+        let signal = Signal::from_vector(vector);
+
+        assert_eq!(3, signal.data.len());
+    }
+}

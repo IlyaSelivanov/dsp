@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use rand::prelude::*;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Statistics {
     mean: f64,
     variance: f64,
@@ -129,6 +130,7 @@ pub fn calc_vector_variance(vec: &Vec<i64>) -> f64 {
     variance / (vec.len() - 1) as f64
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub enum Median {
     Even(i64, i64),
     Odd(i64),
