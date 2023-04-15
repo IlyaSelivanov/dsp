@@ -47,7 +47,7 @@ impl Statistics {
     /// # Panics
     ///
     /// Panics if provided vector is empty.
-    pub fn form_vector(vector: &Vec<i64>) -> Self {
+    pub fn from_vector(vector: &Vec<i64>) -> Self {
         if vector.is_empty() {
             panic!("Not empty data needed.")
         }

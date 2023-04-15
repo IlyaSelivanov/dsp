@@ -22,7 +22,7 @@ impl Signal {
             panic!("Not empty data needed.")
         }
 
-        let statistics = Statistics::form_vector(&vector);
+        let statistics = Statistics::from_vector(&vector);
 
         Signal {
             data: vector,
