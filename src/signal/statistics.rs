@@ -179,3 +179,8 @@ pub fn build_btree_map_histogram(vec: &Vec<i64>) -> Option<BTreeMap<i64, usize>>
 
     Some(map)
 }
+
+#[cfg(test)]
+mod statistics_tests {
+    
+}
