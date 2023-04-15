@@ -2,11 +2,31 @@ use std::collections::BTreeMap;
 
 use plotters::{
     prelude::{BitMapBackend, ChartBuilder, IntoDrawingArea, IntoSegmentedCoord},
-    series::{Histogram},
+    series::Histogram,
     style::{Color, RED, WHITE},
 };
 
 pub fn plot_histogram(histogram: &BTreeMap<i64, usize>) -> Result<(), Box<dyn std::error::Error>> {
+    let x_min = match histogram.keys().min() {
+        Some(min) => *min as u32,
+        None => 0u32,
+    };
+
+    let x_max = match histogram.keys().max() {
+        Some(min) => *min as u32,
+        None => 0u32,
+    };
+
+    let y_min = match histogram.values().min() {
+        Some(min) => *min as u32,
+        None => 0u32,
+    };
+
+    let y_max = match histogram.values().max() {
+        Some(min) => *min as u32,
+        None => 0u32,
+    };
+
     let root = BitMapBackend::new("histogram.png", (640, 480)).into_drawing_area();
     root.fill(&WHITE)?;
 
@@ -14,21 +34,17 @@ pub fn plot_histogram(histogram: &BTreeMap<i64, usize>) -> Result<(), Box<dyn st
         .x_label_area_size(35)
         .y_label_area_size(40)
         .margin(5)
-        .caption("Histogram Test", ("sans-serif", 50.0))
-        .build_cartesian_2d((0u32..2000u32).into_segmented(), 0u32..20u32)?;
+        .caption("Histogram", ("sans-serif", 50.0))
+        .build_cartesian_2d((x_min..x_max).into_segmented(), y_min..y_max)?;
 
     chart
         .configure_mesh()
         .disable_x_mesh()
         .bold_line_style(&WHITE.mix(0.3))
         .y_desc("Count")
-        .x_desc("Bucket")
+        .x_desc("Amplitude")
         .axis_desc_style(("sans-serif", 15))
         .draw()?;
-
-    let data = [
-        0u32, 1, 1, 1, 4, 2, 5, 7, 8, 6, 4, 2, 1, 8, 3, 3, 3, 4, 4, 3, 3, 3,
-    ];
 
     chart.draw_series(
         Histogram::vertical(&chart)
