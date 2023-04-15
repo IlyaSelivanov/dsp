@@ -12,6 +12,7 @@ const MEAN: &str = "mean";
 const MEDIAN: &str = "median";
 const VARIANCE: &str = "variance";
 const DEVIATION: &str = "deviation";
+const HISTOGRAM: &str = "histogram";
 
 const DATA_LENGTH: usize = 1_00;
 
@@ -23,6 +24,7 @@ enum Command {
     Median,
     Variance,
     Deviation,
+    Histogram,
     None,
 }
 
@@ -35,6 +37,7 @@ fn parse_command(cmd: &str) -> Command {
         MEDIAN => return Command::Median,
         VARIANCE => return Command::Variance,
         DEVIATION => return Command::Deviation,
+        HISTOGRAM => return Command::Histogram,
         _ => return Command::None,
     }
 }
@@ -96,12 +99,17 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
                 println!("deviation = {}", signal.statistics().standard_deviation())
             }
+            Command::Histogram => {
+                if check_data_empty(&signal) {
+                    continue;
+                }
+
+                charts::plot_histogram(signal.statistics().histogram())?;
+                println!("Histogram saved to the 'histogram.png' file.")
+            }
             _ => continue,
         }
     }
-
-    println!("{:#?}", signal.statistics().histogram());
-    charts::plot_histogram(signal.statistics().histogram())?;
 
     Ok(())
 }
